@@ -34,16 +34,41 @@ class IndexView(TemplateView):
 		else:
 			nascer_do_sol = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[1]/h4/sunrise/text()')[0]
 			por_do_sol = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[2]/h4/sunset/text()')[0]
-			metar = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/p[2]/text()')[0]
-			taf = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/p[3]/text()')[0]
 			cartas = {'cartas': []}
-			for carta in tree.findall('.//div/ul/li/a'):
+			if tree.xpath('.//div/ul/li/a'):
+
+				for carta in tree.findall('.//div/ul/li/a'):
+					cartas['cartas'].append(
+						{
+							'nome': carta.text, 'link': carta.attrib['href']
+						}
+					)
+
+				cartas['cartas'].pop(0)
+			else:
 				cartas['cartas'].append(
-					{
-						'nome': carta.text, 'link': carta.attrib['href']
-					}
-				)
-			cartas['cartas'].pop(0)
+						{
+							'nome': 'Não há cartas disponíveis', 'link': 'Não há links disponíveis'
+						}
+					)
+			metar = str()
+			if tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/p[2]/text()'):
+				
+				metar = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/p[2]/text()')[0]
+				
+			else:
+
+				metar = 'Não há informação sobre Metar disponível na página'
+
+			taf = str()
+			if tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/p[3]/text()'):
+
+				taf = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/p[3]/text()')[0]
+
+			else:
+
+				taf = 'Não há informação sobre Taf disponível na página'
+
 			contexto = {
 				'resultado': True,
 				'nascer_do_sol': nascer_do_sol,
