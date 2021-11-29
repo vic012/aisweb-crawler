@@ -32,8 +32,14 @@ class IndexView(TemplateView):
 				'mensagem': 'A pesquisa não retornou nenhum resultado, verifique o ICAO'
 			}
 		else:
-			nascer_do_sol = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[1]/h4/sunrise/text()')[0]
-			por_do_sol = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[2]/h4/sunset/text()')[0]
+			if tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[1]/h4/sunrise/text()'):
+				nascer_do_sol = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[1]/h4/sunrise/text()')[0]
+			else:
+				nascer_do_sol = 'Não há informações sobre nascer do sol'
+			if tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[2]/h4/sunset/text()'):
+				por_do_sol = tree.xpath('/html/body/div[1]/div/div/div[2]/div[2]/div[1]/div[2]/h4/sunset/text()')[0]
+			else:
+				por_do_sol = 'Não há informações de por do sol'
 			cartas = {'cartas': []}
 			if tree.xpath('.//div/ul/li/a'):
 
